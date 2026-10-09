@@ -29,7 +29,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
  * If any of these are missing, the process exits immediately with a clear
  * error message so the problem is caught before the server accepts traffic.
  */
-const REQUIRED_VARS = ['PORT', 'NODE_ENV', 'CORS_ORIGIN'];
+const REQUIRED_VARS = ['PORT', 'NODE_ENV', 'CORS_ORIGIN', 'MONGODB_URI'];
 
 const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
 
@@ -52,6 +52,18 @@ if (Number.isNaN(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
   process.exit(1);
 }
 
+// Validate MONGODB_URI scheme to fail fast on invalid connection strings.
+// Note: Never log process.env.MONGODB_URI here as it may contain embedded credentials.
+if (
+  !process.env.MONGODB_URI.startsWith('mongodb://') &&
+  !process.env.MONGODB_URI.startsWith('mongodb+srv://')
+) {
+  console.error(
+    '[config/env] Invalid MONGODB_URI: must begin with "mongodb://" or "mongodb+srv://".'
+  );
+  process.exit(1);
+}
+
 /**
  * Exported configuration object.
  * Object.freeze() prevents accidental mutation anywhere in the codebase.
@@ -60,6 +72,7 @@ const config = Object.freeze({
   port: parsedPort,
   nodeEnv: process.env.NODE_ENV,
   corsOrigin: process.env.CORS_ORIGIN,
+  mongodbUri: process.env.MONGODB_URI,
 });
 
 module.exports = config;
