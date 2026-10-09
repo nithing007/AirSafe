@@ -14,7 +14,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mongoose": "^9.11.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -23,6 +24,8 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "setupFiles": ["./tests/setup.js"]
+    "setupFiles": [
+      "./tests/setup.js"
+    ]
   }
 }

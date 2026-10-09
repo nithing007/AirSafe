@@ -27,3 +27,7 @@
 process.env.PORT = process.env.PORT || '3000';
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 process.env.CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
+// Mock URI to satisfy config/env.js presence check during tests.
+// Tests mock database connections and must NOT connect to a real MongoDB instance.
+process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/airsafe_test';
+
