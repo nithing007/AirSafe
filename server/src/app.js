@@ -28,6 +28,7 @@ const healthRouter = require('./routes/health.routes');
 const airRouter = require('./routes/air.routes');
 const exposureRouter = require('./routes/exposure.routes');
 const recommendationRouter = require('./routes/recommendation.routes');
+const geoRouter = require('./routes/geo.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -57,6 +58,7 @@ app.use('/api/health', healthRouter);
 app.use('/api/air', airRouter);
 app.use('/api/exposure', exposureRouter);
 app.use('/api/recommendations', recommendationRouter);
+app.use('/api/geo', geoRouter);
 
 // ── Error handlers (must be mounted last) ──────────────────────────────────
 

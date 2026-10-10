@@ -22,6 +22,8 @@ export function AirQualityProvider({ children }) {
         latitude: location.latitude,
         longitude: location.longitude,
         locationId: location.id,
+        name: location.name,
+        country: location.country,
       });
 
       let currentData = result.data;
