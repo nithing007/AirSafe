@@ -42,12 +42,13 @@ cp .env.example .env
 
 Open `.env` and set the following variables:
 
-| Variable      | Required | Description                                     | Example                                                                                    |
-|---------------|----------|-------------------------------------------------|--------------------------------------------------------------------------------------------|
-| `PORT`        | Yes      | Port the server listens on                      | `3000`                                                                                     |
-| `NODE_ENV`    | Yes      | Runtime environment (`development`/`production`) | `development`                                                                              |
-| `CORS_ORIGIN` | Yes      | Allowed frontend origin                         | `http://localhost:5173`                                                                    |
-| `MONGODB_URI` | Yes      | MongoDB Atlas connection string                 | `mongodb+srv://<user>:<password>@cluster0.abcde.mongodb.net/airsafe?retryWrites=true&w=majority` |
+| Variable              | Required | Description                                       | Example                                                                                    |
+|-----------------------|----------|---------------------------------------------------|--------------------------------------------------------------------------------------------|
+| `PORT`                | Yes      | Port the server listens on                        | `3000`                                                                                     |
+| `NODE_ENV`            | Yes      | Runtime environment (`development`/`production`)   | `development`                                                                              |
+| `CORS_ORIGIN`         | Yes      | Allowed frontend origin                           | `http://localhost:5173`                                                                    |
+| `MONGODB_URI`         | Yes      | MongoDB Atlas connection string                   | `mongodb+srv://<user>:<password>@cluster0.abcde.mongodb.net/airsafe?retryWrites=true&w=majority` |
+| `OPENWEATHER_API_KEY` | Yes      | OpenWeather API key for live pollution data       | `your_openweather_api_key_here`                                                            |
 
 > **Never commit `.env` to version control.** It is blocked by `.gitignore`.
 
@@ -140,7 +141,7 @@ Tests run using Jest and Supertest. All database operations are mocked using Jes
 
 ```
 server/
-├── .env.example           — Environment variable template (including MONGODB_URI)
+├── .env.example           — Environment variable template (including MONGODB_URI and OPENWEATHER_API_KEY)
 ├── package.json           — Dependencies (Express, Mongoose, CORS, etc.)
 ├── package-lock.json      — Locked dependency tree
 ├── src/
@@ -150,13 +151,21 @@ server/
 │   │   ├── env.js         — Environment variable validation and frozen export
 │   │   └── db.js          — MongoDB connection service (connectDB, disconnectDB)
 │   ├── controllers/
-│   │   └── health.controller.js
+│   │   ├── health.controller.js
+│   │   └── air.controller.js  — Latitude/longitude validation and air quality handling
+│   ├── services/
+│   │   └── openweather.service.js — OpenWeather API client with 5s timeout & forecast window aggregation
+│   ├── utils/
+│   │   └── aqiCalculator.js   — Scientific US EPA piecewise linear AQI calculation engine
 │   ├── middleware/
 │   │   └── errorHandler.js — 404 and global error handlers
 │   └── routes/
-│       └── health.routes.js
+│       ├── health.routes.js
+│       └── air.routes.js   — /api/air/current & /api/air/forecast endpoints
 └── tests/
     ├── setup.js           — Jest setup file (safe test environment variables)
+    ├── aqiCalculator.test.js — EPA AQI calculation engine unit tests
+    ├── air.test.js        — /api/air endpoints integration tests (mocked fetch)
     ├── db.test.js         — Database connection and disconnection tests (mocked)
     ├── server.test.js     — Server startup flow, failure exit, and shutdown tests (mocked)
     └── health.test.js     — Health endpoint and route integration tests
@@ -166,8 +175,10 @@ server/
 
 ## Implemented Endpoints
 
-| Method | Endpoint      | Status        | Phase |
-|--------|---------------|---------------|-------|
-| GET    | `/api/health` | ✅ Implemented | Phase 1 |
+| Method | Endpoint            | Purpose                                            | Status        | Phase   |
+|--------|---------------------|----------------------------------------------------|---------------|---------|
+| GET    | `/api/health`       | Check server process status                        | ✅ Implemented | Phase 1 |
+| GET    | `/api/air/current`  | Current air quality & calculated EPA AQI by coords | ✅ Implemented | Phase 3 |
+| GET    | `/api/air/forecast` | 24-hr hourly & 7-day forecast with clean windows   | ✅ Implemented | Phase 3 |
 
-*Note: All data models (Exposure, AirQualityCache, User) and feature endpoints remain deferred to subsequent phases as per the project architecture plan.*
+*Note: All data models (ExposureRecord, AirQualityCache, User) and calculation endpoints (/api/exposure/*) remain deferred to subsequent phases as per the project architecture plan.*

@@ -51,8 +51,20 @@ function errorHandler(err, req, res, next) {
   console.error('[errorHandler]', err);
 
   const statusCode = err.statusCode || 500;
+
+  // Safe operational errors (4xx client errors and 502/503/504 upstream gateway errors)
+  // retain their safe messages in production. Unhandled 500 errors are masked.
+  const isOperational =
+    (statusCode >= 400 && statusCode < 500) ||
+    statusCode === 502 ||
+    statusCode === 503 ||
+    statusCode === 504;
+
+  const isProduction =
+    config.nodeEnv === 'production' || process.env.NODE_ENV === 'production';
+
   const message =
-    config.nodeEnv === 'production'
+    isProduction && !isOperational
       ? 'Internal server error'
       : err.message || 'Internal server error';
 
