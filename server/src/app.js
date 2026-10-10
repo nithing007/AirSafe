@@ -26,6 +26,8 @@ const config = require('./config/env');
 
 const healthRouter = require('./routes/health.routes');
 const airRouter = require('./routes/air.routes');
+const exposureRouter = require('./routes/exposure.routes');
+const recommendationRouter = require('./routes/recommendation.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -53,6 +55,8 @@ app.use(express.json());
 // All API routes are prefixed with /api.
 app.use('/api/health', healthRouter);
 app.use('/api/air', airRouter);
+app.use('/api/exposure', exposureRouter);
+app.use('/api/recommendations', recommendationRouter);
 
 // ── Error handlers (must be mounted last) ──────────────────────────────────
 

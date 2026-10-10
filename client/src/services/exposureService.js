@@ -38,7 +38,10 @@ export const exposureService = {
     if (!USE_MOCK_DATA) {
       try {
         const response = await apiClient.get('/exposure/history');
-        return { data: response.data, isMock: false };
+        const historyData = Array.isArray(response.data)
+          ? response.data
+          : (response.data && Array.isArray(response.data.history) ? response.data.history : []);
+        return { data: historyData, isMock: false };
       } catch (err) {
         console.warn('Backend /api/exposure/history unavailable, returning local history.', err.message);
       }
