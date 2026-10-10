@@ -20,7 +20,7 @@ export default function App() {
     <ThemeProvider>
       <SimulationProvider>
         <AirQualityProvider>
-          <Router>
+          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-teal-500 selection:text-white transition-colors duration-200 relative">
               <Navbar />
 
