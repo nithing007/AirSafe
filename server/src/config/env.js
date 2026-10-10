@@ -29,7 +29,13 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
  * If any of these are missing, the process exits immediately with a clear
  * error message so the problem is caught before the server accepts traffic.
  */
-const REQUIRED_VARS = ['PORT', 'NODE_ENV', 'CORS_ORIGIN', 'MONGODB_URI'];
+const REQUIRED_VARS = [
+  'PORT',
+  'NODE_ENV',
+  'CORS_ORIGIN',
+  'MONGODB_URI',
+  'OPENWEATHER_API_KEY',
+];
 
 const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
 
@@ -73,6 +79,7 @@ const config = Object.freeze({
   nodeEnv: process.env.NODE_ENV,
   corsOrigin: process.env.CORS_ORIGIN,
   mongodbUri: process.env.MONGODB_URI,
+  openWeatherApiKey: process.env.OPENWEATHER_API_KEY,
 });
 
 module.exports = config;

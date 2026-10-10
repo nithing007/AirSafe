@@ -25,6 +25,7 @@ const cors = require('cors');
 const config = require('./config/env');
 
 const healthRouter = require('./routes/health.routes');
+const airRouter = require('./routes/air.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -50,8 +51,8 @@ app.use(express.json());
 // ── Routes ─────────────────────────────────────────────────────────────────
 
 // All API routes are prefixed with /api.
-// Phase 1: health endpoint only.
 app.use('/api/health', healthRouter);
+app.use('/api/air', airRouter);
 
 // ── Error handlers (must be mounted last) ──────────────────────────────────
 

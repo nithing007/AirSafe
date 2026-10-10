@@ -30,4 +30,8 @@ process.env.CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 // Mock URI to satisfy config/env.js presence check during tests.
 // Tests mock database connections and must NOT connect to a real MongoDB instance.
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/airsafe_test';
+// Mock OpenWeather API key to satisfy config/env.js presence check during tests.
+// Tests mock external fetch calls and must NOT make real network requests.
+process.env.OPENWEATHER_API_KEY =
+  process.env.OPENWEATHER_API_KEY || 'mock-openweather-key-for-tests';
 
