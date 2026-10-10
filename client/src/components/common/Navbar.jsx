@@ -19,6 +19,7 @@ import { useSimulation } from '../../context/SimulationContext';
 import { useAirQuality } from '../../context/AirQualityContext';
 import { useTheme } from '../../context/ThemeContext';
 import SimulationControlModal from '../simulation/SimulationControlModal';
+import LocationSelectorModal from './LocationSelectorModal';
 
 export default function Navbar() {
   const location = useLocation();
@@ -27,6 +28,7 @@ export default function Navbar() {
   const { selectedLocation, availableLocations, setSelectedLocation, detectUserLocation } = useAirQuality();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [simModalOpen, setSimModalOpen] = useState(false);
+  const [locationModalOpen, setLocationModalOpen] = useState(false);
 
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: Wind },
@@ -98,26 +100,21 @@ export default function Navbar() {
             {/* Right Controls: Location Dropdown + Theme Toggle + Demo Mode */}
             <div className="hidden sm:flex items-center gap-2 shrink-0">
               {/* Location Selector */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300">
-                <MapPin className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 mr-1 shrink-0" />
-                <select
-                  value={selectedLocation.id}
-                  onChange={(e) => {
-                    const loc = availableLocations.find((l) => l.id === e.target.value);
-                    if (loc) setSelectedLocation(loc);
-                  }}
-                  className="bg-transparent border-none text-slate-800 dark:text-slate-200 text-xs font-semibold focus:ring-0 cursor-pointer pr-1"
-                >
-                  {availableLocations.map((loc) => (
-                    <option key={loc.id} value={loc.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">
-                      {loc.name}
-                    </option>
-                  ))}
-                </select>
+              <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-2 py-1.5 text-xs text-slate-700 dark:text-slate-300">
                 <button
+                  type="button"
+                  onClick={() => setLocationModalOpen(true)}
+                  className="flex items-center gap-1.5 hover:text-teal-600 dark:hover:text-teal-400 font-semibold max-w-[140px] md:max-w-[180px] truncate"
+                  title="Search or change location"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
+                  <span className="truncate">{selectedLocation?.name || 'Select City'}</span>
+                </button>
+                <button
+                  type="button"
                   onClick={detectUserLocation}
                   title="Detect GPS location"
-                  className="ml-1 text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-300 text-[11px] font-bold"
+                  className="ml-2 pl-2 border-l border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-300 text-[11px] font-bold"
                 >
                   GPS
                 </button>
@@ -179,6 +176,30 @@ export default function Navbar() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 pt-3 pb-6 space-y-2">
+            <div className="p-2 mb-2 flex items-center justify-between bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => {
+                  setLocationModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 truncate flex-1"
+              >
+                <MapPin className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" />
+                <span className="truncate">{selectedLocation?.name || 'Select Location'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  detectUserLocation();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-xs font-bold text-teal-600 dark:text-teal-400 px-2.5 py-1 bg-white dark:bg-slate-800 rounded-lg shadow-sm"
+              >
+                GPS
+              </button>
+            </div>
+
             {navLinks.map((link) => {
               const Icon = link.icon;
               const active = isActive(link.path);
@@ -203,6 +224,7 @@ export default function Navbar() {
       </header>
 
       <SimulationControlModal isOpen={simModalOpen} onClose={() => setSimModalOpen(false)} />
+      <LocationSelectorModal isOpen={locationModalOpen} onClose={() => setLocationModalOpen(false)} />
     </>
   );
 }

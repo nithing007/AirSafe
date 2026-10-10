@@ -1,7 +1,7 @@
 import apiClient from './api';
 import { generateMockCurrentAir, generateMockForecast, MOCK_LOCATIONS } from './mockData';
 
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || true; // Fallback-safe
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 export const airQualityService = {
   /**
@@ -24,20 +24,21 @@ export const airQualityService = {
     // Mock response fallback
     await new Promise((resolve) => setTimeout(resolve, 350));
     let matchedLocation = MOCK_LOCATIONS[0];
-    if (locationId) {
-      matchedLocation = MOCK_LOCATIONS.find((l) => l.id === locationId) || MOCK_LOCATIONS[0];
-    } else if (latitude && longitude) {
-      // Find closest or return dynamic object
+    if (locationId && MOCK_LOCATIONS.some((l) => l.id === locationId)) {
+      matchedLocation = MOCK_LOCATIONS.find((l) => l.id === locationId);
+    } else if (params.name || (latitude && longitude)) {
+      // Arbitrary location or GPS coordinates
       matchedLocation = {
-        name: 'Detected Local Coordinates',
-        latitude,
-        longitude,
-        country: 'Local',
-        defaultAqi: 172,
+        id: locationId || `loc-${latitude}-${longitude}`,
+        name: params.name || 'Detected Local Area',
+        latitude: typeof latitude === 'number' ? latitude : 11.0168,
+        longitude: typeof longitude === 'number' ? longitude : 76.9558,
+        country: params.country || 'Local',
+        defaultAqi: 154,
         dominantPollutant: 'PM2.5',
-        temp: 27,
-        humidity: 60,
-        windSpeed: 3.2,
+        temp: 26,
+        humidity: 64,
+        windSpeed: 3.8,
       };
     }
 
