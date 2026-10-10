@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wind, Shield, Cloud, Server, ExternalLink } from 'lucide-react';
+import { Wind, Shield, Cloud, Server } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -51,16 +51,6 @@ export default function Footer() {
 
         <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-4">
           <p>© {new Date().getFullYear()} AirSafe Team. Built for the WeMakeDevs × AWS Hackathon.</p>
-          <div className="flex items-center gap-4">
-            <a 
-              href="https://github.com/nithing007/AirSafe" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="flex items-center gap-1 text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
-            >
-              GitHub Repository <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
         </div>
       </div>
     </footer>

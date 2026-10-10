@@ -1,7 +1,7 @@
 import apiClient from './api';
 import { MOCK_ROUTES } from './mockData';
 
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || true;
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 /**
  * Haversine distance calculation in kilometers

@@ -4,6 +4,30 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LocationSearchInput from '../components/common/LocationSearchInput';
 
+// Mock geocodingService so tests don't depend on real network calls.
+// The search test needs searchLocations to resolve quickly so the component
+// can exit the "Searching..." state and render results.
+vi.mock('../services/geocodingService', () => ({
+  geocodingService: {
+    searchLocations: vi.fn().mockResolvedValue({
+      results: [
+        {
+          label: 'Coimbatore, Tamil Nadu, India',
+          name: 'Coimbatore',
+          latitude: 11.0168,
+          longitude: 76.9558,
+          country: 'India',
+          source: 'catalog',
+        },
+      ],
+      source: 'catalog',
+    }),
+    getPresetLocations: vi.fn().mockReturnValue([
+      { id: 'coimbatore', name: 'Coimbatore', latitude: 11.0168, longitude: 76.9558, country: 'India' },
+    ]),
+  },
+}));
+
 function TestWrapper(props) {
   const [value, setValue] = useState(props.initialValue || '');
   const [resolved, setResolved] = useState(props.initialResolved || null);

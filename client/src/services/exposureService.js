@@ -2,7 +2,7 @@ import apiClient from './api';
 import { calculateExposure } from '../utils/exposureEngine';
 import { MOCK_HISTORY } from './mockData';
 
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || true;
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 export const exposureService = {
   /**
